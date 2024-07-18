@@ -19,11 +19,6 @@ const codeMessagesState = atom({
   }]
 })
 
-const errorInGeneration = atom({
-  key: "errorInGeneration",
-  default: "",
-})
-
 const addContenttoMessageState = selector({
   key: "addContenttoMessageState",
   get: ({ get }) => get(messagesState),
@@ -34,4 +29,10 @@ const addContenttoMessageState = selector({
   }
 })
 
-export { messagesState, codeMessagesState, addContenttoMessageState };
+//for model 
+const modalAtom = atom({
+  key: "modelAtom",
+  default: false,
+})
+
+export { messagesState, codeMessagesState, modalAtom };

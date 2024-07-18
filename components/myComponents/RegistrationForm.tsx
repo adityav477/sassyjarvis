@@ -19,12 +19,15 @@ import { FormError } from "@/components/myComponents/(form)/form-error";
 import { useState } from "react";
 import registrationAction from "@/actions/RegistrationAction";
 import SocialsButtons from "./socials";
+import { useRouter } from "next/navigation";
 
 export default function RegistrationForm() {
   const [error, setError] = useState<{ message: string, success: null | number }>({
     message: "",
     success: null,
   })
+
+  const router = useRouter();
 
   const { handleSubmit, register, formState: { errors, isSubmitting } } = useForm<z.infer<typeof RegistrationSchema>>({
     resolver: zodResolver(RegistrationSchema),
@@ -35,6 +38,9 @@ export default function RegistrationForm() {
     // console.log(data);
     const response = await registrationAction(data);
     setError(response);
+    if (response.success) {
+      router.push("/dashboard");
+    }
   }
 
   return <div>

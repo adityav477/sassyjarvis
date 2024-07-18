@@ -19,6 +19,7 @@ import { useState } from "react";
 import SocialsButtons from "./socials";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function LoginForm() {
 
   //to get the error form the url for signing up with same email but differnet providerr
   const searchParams = useSearchParams();
-  const errorURL = searchParams.get("error") === "OAuthAccountNotLinked" ? "Email registered through different provider" : "";
+  const errorURL = searchParams.get("error") === "OAuthAccountNotLinked" ? toast.error("Email registered through different provider") : "";
 
 
   //credentials Login
@@ -89,11 +90,11 @@ export default function LoginForm() {
         <SocialsButtons />
       </CardContent>
       <CardFooter>
-        <Button variant="link" >
           <Link href="/signup">
-            Don't have an Account? SignUp
+          <Button variant="link" >
+            {"Don't have an Account? SignUp"}
+          </Button>
           </Link>
-        </Button>
       </CardFooter>
     </Card>
   </div >

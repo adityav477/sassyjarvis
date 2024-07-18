@@ -1,7 +1,8 @@
-
 import {
   GoogleGenerativeAI,
 } from "@google/generative-ai";
+import { checkLimit, increaseFreeLimit } from "@/lib/apiLimit";
+import { NextResponse } from "next/server";
 
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey || "");
@@ -22,6 +23,17 @@ let chatSession: any;
 
 async function generateCode(prompt: string) {
 
+  const response = await checkLimit();
+
+  if (!response) {
+    return new NextResponse("Something went while checking the limit", { status: 402 });
+  }
+
+  console.log("response is ", response);
+
+  if (!response?.plan && !response?.leftGenerations) {
+    return new NextResponse("Free Limit Expired", { status: 401 });
+  }
 
   if (!chatSession) {
     chatSession = model.startChat({
@@ -36,6 +48,11 @@ async function generateCode(prompt: string) {
   try {
     const result = await chatSession.sendMessage(prompt);
     console.log(result.response.text());
+
+    if (result?.response && !response?.plan) {
+      await increaseFreeLimit();
+    }
+
     return result.response.text();
   } catch (error) {
     console.log("error in route.ts");

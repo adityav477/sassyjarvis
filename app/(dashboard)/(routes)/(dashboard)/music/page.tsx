@@ -3,22 +3,26 @@ import Heading from '@/components/myComponents/heading'
 import z from "zod";
 import { Button } from '@/components/ui/button'
 import { ConversationSchema } from '@/schemas'
-import {  Music} from 'lucide-react'
+import { Music } from 'lucide-react'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod';
-import generateResponse from '@/app/api/conversations/route';
 import { useRouter } from 'next/navigation';
 import { MicOff } from 'lucide-react';
 import LoadingComponent from '@/components/myComponents/convoAndcode/loadingComponent';
 import axios from "axios";
-
+import { useRecoilState } from 'recoil';
+import { modalAtom } from '@/actions/atoms/messageAtom';
+// import { generateMusic } from '@/app/api/music/route';
+import { NextResponse } from 'next/server';
+import toast from 'react-hot-toast';
 
 
 function Conversation() {
+  const [modal, setModal] = useRecoilState(modalAtom);
   const [music, setMusic] = useState<string>();
   const router = useRouter();
-  const { handleSubmit, reset, register, formState: {  isLoading, isSubmitting } } = useForm<z.infer<typeof ConversationSchema>>({
+  const { handleSubmit, reset, register, formState: { isLoading, isSubmitting } } = useForm<z.infer<typeof ConversationSchema>>({
     resolver: zodResolver(ConversationSchema),
   });
 
@@ -27,17 +31,27 @@ function Conversation() {
     const prompt = values.message;
     console.log(prompt);
     try {
-      // const response = await axios.post("/api/music",{prompt: prompt});
-      // console.log("response reached back");
-      // console.log(response.data.audio);
-      setMusic("https://replicate.delivery/czjl/7ig5U1LZrZZPCFte1J4a8skeHf1stVk4AZItucxD6opNqz7lA/gen_sound.wav");
+      const response = await axios.post("/api/music", { prompt: prompt });
+      // const response = await generateMusic(prompt);
+      console.log("response reached back");
 
-      reset();
+      // setMusic("https://replicate.delivery/czjl/7ig5U1LZrZZPCFte1J4a8skeHf1stVk4AZItucxD6opNqz7lA/gen_sound.wav");
+      // Handle successful URL response
+      setMusic(response.data.audio);
+      if (response?.status) {
+        if (response?.status === 401) {
+          // Handle 401 error
+          setModal(!modal);
+        }
+      } else {
+        // Handle unexpected response type (shouldn't occur)
+        toast.error("Unexpected while generating Music");
+      }
     } catch (error) {
-      alert("Something Went Wrong");
-    } finally{
-      router.refresh();
-    }}
+      console.log("error while generating", error);
+      toast.error(`error while generating music ${error}`);
+    }
+  }
 
   return (
     <div>
@@ -55,7 +69,7 @@ function Conversation() {
             className='col-span-12 lg:col-span-10 focus-visible:bg-none focus-visible:outline-none'
             {...register("message")}
           />
-          <Button variant="default" type='submit'
+          <Button variant="indigo" type='submit'
             className='col-span-12 lg:col-span-2'
             disabled={isLoading}
           >
@@ -72,12 +86,13 @@ function Conversation() {
             </div>
           </div>
         }
-        
-        <div className='w-full p-2 lg:px-8'>
-          <audio controls className='w-full'>
-            <source src={music} />
-          </audio>
-        </div>
+
+        {music &&
+          <div className='w-full p-2 lg:px-8'>
+            <audio controls className='w-full'>
+              <source src={music} />
+            </audio>
+          </div>}
 
         {isSubmitting && <LoadingComponent />}
       </div>

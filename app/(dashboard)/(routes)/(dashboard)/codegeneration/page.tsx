@@ -12,6 +12,9 @@ import InformationRenderComponent from '@/components/myComponents/convoAndcode/i
 import { useRouter } from 'next/navigation';
 import EmptyConversation from '@/components/myComponents/convoAndcode/emptyConversation';
 import LoadingComponent from '@/components/myComponents/convoAndcode/loadingComponent';
+import { modalAtom } from '@/actions/atoms/messageAtom';
+import { useRecoilState } from 'recoil';
+import toast from 'react-hot-toast';
 
 
 interface messageType {
@@ -20,6 +23,7 @@ interface messageType {
 }
 
 function CodeGeneration() {
+  const [modal, setModal] = useRecoilState(modalAtom);
   const [messages, setMessages] = useState<messageType[]>([]);
   const router = useRouter();
   const { handleSubmit, reset, register, formState: { isSubmitted, isLoading, isSubmitting } } = useForm<z.infer<typeof ConversationSchema>>({
@@ -34,16 +38,20 @@ function CodeGeneration() {
       const response = await generateCode(prompt);
       // const response = "```import React from 'React'```";
       // await new Promise((resolve) => setTimeout(resolve, 5000));
-      if (response) {
+      if (response?.status === 401) {
+        setModal(!modal);
+      }
+      else {
         setMessages((currentValue) => [...currentValue, { prompt: prompt, response: response }]);
         reset();
       }
     } catch (error) {
-      alert("Something Went Wrong");
+      toast.error("Something Went Wrong");
     } finally {
       router.refresh();
     }
   }
+
 
   return (
     <div>

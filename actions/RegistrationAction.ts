@@ -34,12 +34,11 @@ const registrationAction = async (values: z.infer<typeof RegistrationSchema>) =>
     }
   })
 
-  //generate and save the token for the created user 
-  const verificationToken = await generateVerficationToken(newUser.email);
+  // //generate and save the token for the created user 
+  // const verificationToken = await generateVerficationToken(newUser.email);
 
   // TODO; Send the email
   return { message: "User Created", success: 1 }
-
 }
 
 export default registrationAction;

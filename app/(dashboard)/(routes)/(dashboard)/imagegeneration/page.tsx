@@ -12,6 +12,7 @@ import InformationRenderComponent from '@/components/myComponents/convoAndcode/i
 import { useRouter } from 'next/navigation';
 import EmptyConversation from '@/components/myComponents/convoAndcode/emptyConversation';
 import LoadingComponent from '@/components/myComponents/convoAndcode/loadingComponent';
+import toast from 'react-hot-toast';
 
 
 interface messageType {
@@ -37,15 +38,18 @@ function CodeGeneration() {
     const prompt = values.message;
     // console.log(process.env.OPENAI_API_KEY)
     try {
-      // const response = await generateCode(prompt);
+      const response = await generateCode(prompt);
       // // const response = "```import React from 'React'```";
       // // await new Promise((resolve) => setTimeout(resolve, 5000));
-      // if (response) {
-      //   setMessages((currentValue) => [...currentValue, { prompt: prompt, response: response }]);
-      //   reset();
-      // }
+      if (response?.status === 401) {
+        alert("hello");
+      }
+      else {
+        setMessages((currentValue) => [...currentValue, { prompt: prompt, response: response }]);
+        reset();
+      }
     } catch (error) {
-      alert("Something Went Wrong");
+      toast.error("Erro While Generating Images")
     } finally {
       router.refresh();
     }
@@ -80,13 +84,15 @@ function CodeGeneration() {
             className='text-center text-sm font-semibold col-span-6 lg:col-span-2 w-full border-2 border-black/10 rounded-lg '>
             {resolutions.map((resolution) => (
               <option {...register("resolution")}
-                value={resolution.value}>
+                value={resolution.value}
+                key={resolution.value}
+              >
                 {resolution.label}
               </option>
             ))}
           </select>
-          <Button variant="default" type='submit'
-            className='col-span-12 lg:col-span-2'
+          <Button variant={"indigo"} type='submit'
+            className='col-span-12 lg:col-span-2 '
             disabled={isLoading}
           >
             Generate

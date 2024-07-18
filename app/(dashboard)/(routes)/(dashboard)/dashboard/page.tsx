@@ -5,13 +5,13 @@ import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 
 const routes = [
-  {
-    label: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-    color: "text-green-800",
-    bgcolor: "bg-green-200/50",
-  },
+  //   {
+  //   label: "Dashboard",
+  //   href: "/dashboard",
+  //   icon: LayoutDashboard,
+  //   color: "text-green-800",
+  //   bgcolor: "bg-green-200/50",
+  // },
   {
     label: "Conversation",
     href: "/conversation",
@@ -66,8 +66,8 @@ export default async function Dashboard() {
         <div className="text-3xl font-bold md:text-2xl md:font-bold">
           Boldest AI Ever
         </div>
-        <div className="text-md ">
-          "Be Bold Be Brave"
+        <div className="text-md">
+          {"Be Bold Be Brave"}
         </div>
       </div>
       <div className="h-full w-full flex flex-col justify-center items-center gap-4 mt-10">

@@ -1,11 +1,10 @@
 import { auth } from "@/auth"
 
-export default async function LandingPage(){
+export default async function LandingPage() {
   const session = await auth();
   return (
-  <div>
+    <div className="bg-blue-300">
       LandingPage
-      {JSON.stringify(session)};
     </div>
   )
 }

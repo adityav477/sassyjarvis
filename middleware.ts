@@ -6,13 +6,15 @@ import { publicRoutes, apiAuthRoutePrefix, authRoutes, afterLoginDefaultPage } f
 const { auth } = NextAuth(authOptions);
 
 // @ts-ignore
-export default auth((req) => {
+export default auth((req: any) => {
   // req.auth
+  // console.log(!!req.auth);
   const isLoggedIn = !!req.auth;
   console.log("route: ", req.nextUrl.pathname);
   console.log("loggedIn ? ", isLoggedIn);
 
   const isApiAuthRoute = req.nextUrl.pathname.startsWith(apiAuthRoutePrefix);
+  // console.log(isApiAuthRoute);
   const isPublicRoute = publicRoutes.includes(req.nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(req.nextUrl.pathname);
   // console.log(isApiAuthRoute);

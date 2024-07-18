@@ -12,7 +12,9 @@ import InformationRenderComponent from '@/components/myComponents/convoAndcode/i
 import { useRouter } from 'next/navigation';
 import EmptyConversation from '@/components/myComponents/convoAndcode/emptyConversation';
 import LoadingComponent from '@/components/myComponents/convoAndcode/loadingComponent';
-
+import { useRecoilState } from 'recoil';
+import { modalAtom } from '@/actions/atoms/messageAtom';
+import toast from 'react-hot-toast';
 
 interface messageType {
   prompt: string,
@@ -20,6 +22,7 @@ interface messageType {
 }
 
 function Conversation() {
+  const [modal, setModal] = useRecoilState(modalAtom);
   const [messages, setMessages] = useState<messageType[]>([]);
   const router = useRouter();
   const { handleSubmit, reset, register, formState: { isSubmitted, isLoading, isSubmitting } } = useForm<z.infer<typeof ConversationSchema>>({
@@ -27,20 +30,28 @@ function Conversation() {
   });
 
   const onSubmit = async (values: z.infer<typeof ConversationSchema>) => {
-    console.log(values);
     const prompt = values.message;
     // console.log(process.env.OPENAI_API_KEY)
     try {
+      console.log(
+        "before response", prompt
+      )
       const response = await generateResponse(prompt);
+      console.log(response);
       // const response = "Response from the life";
       // await new Promise((resolve) => setTimeout(resolve, 5000));
-      if (response) {
+      if (response?.status === 401) {
+        setModal(!modal);
+        // alert(modal.toString());
+      } else {
         setMessages((currentValue) => [...currentValue, { prompt: prompt, response: response }]);
         reset();
       }
     } catch (error) {
-      alert("Something Went Wrong");
+      toast.error(`${error}`);
     } finally {
+      console.log("refreshed conversations page.tsx");
+      // window.location.reload();
       router.refresh();
     }
   }
