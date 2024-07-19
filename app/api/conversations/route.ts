@@ -22,7 +22,8 @@ const generationConfig = {
 
 let chatSession: any;
 
-async function generateResponse(prompt: string) {
+// async function generateResponse(prompt: string) {
+export async function POST(req: Request) {
   // console.log("before auth");
   // const session = await auth();
   // console.log(JSON.stringify(session));
@@ -56,6 +57,9 @@ async function generateResponse(prompt: string) {
     });
   }
 
+  const body = await req.json();
+  const { prompt } = body;
+
   try {
     const result = await chatSession.sendMessage(prompt);
     console.log(result.response.text());
@@ -64,12 +68,11 @@ async function generateResponse(prompt: string) {
       await increaseFreeLimit();
     }
 
-    return result.response.text();
+    return NextResponse.json(result.response.text());
   } catch (error) {
     console.log("error in route.ts");
-    return error;
+    return new NextResponse(`Error while Generating Response: ${error}`, { status: 409 });
   }
 }
 
-export default generateResponse;
 

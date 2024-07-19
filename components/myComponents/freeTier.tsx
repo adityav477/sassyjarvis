@@ -11,7 +11,7 @@ function FreeTier() {
     console.log("inside useEffect");
     async function upgrade() {
       const response = await checkLimit();
-      if (response.plan) {
+      if (response?.plan) {
         console.log("upgraded user");
         setIsUpgraded(true);
       } else {

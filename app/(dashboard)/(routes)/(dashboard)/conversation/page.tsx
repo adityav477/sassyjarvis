@@ -7,7 +7,6 @@ import { Brain, MessageSquare, User } from 'lucide-react'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod';
-import generateResponse from '@/app/api/conversations/route';
 import InformationRenderComponent from '@/components/myComponents/convoAndcode/inforRenderComponent';
 import { useRouter } from 'next/navigation';
 import EmptyConversation from '@/components/myComponents/convoAndcode/emptyConversation';
@@ -15,11 +14,13 @@ import LoadingComponent from '@/components/myComponents/convoAndcode/loadingComp
 import { useRecoilState } from 'recoil';
 import { modalAtom } from '@/actions/atoms/messageAtom';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
 interface messageType {
   prompt: string,
   response: string
 }
+
 
 function Conversation() {
   const [modal, setModal] = useRecoilState(modalAtom);
@@ -36,15 +37,17 @@ function Conversation() {
       console.log(
         "before response", prompt
       )
-      const response = await generateResponse(prompt);
+      const response = await axios.post("/api/conversations", { prompt: prompt });
       console.log(response);
       // const response = "Response from the life";
       // await new Promise((resolve) => setTimeout(resolve, 5000));
+
       if (response?.status === 401) {
         setModal(!modal);
         // alert(modal.toString());
       } else {
-        setMessages((currentValue) => [...currentValue, { prompt: prompt, response: response }]);
+        const data = response?.data;
+        setMessages((currentValue) => [...currentValue, { prompt: prompt, response: data }]);
         reset();
       }
     } catch (error) {

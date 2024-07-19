@@ -7,7 +7,6 @@ import { Brain, MessageSquare, User } from 'lucide-react'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod';
-import generateCode from '@/app/api/codegeneration/route';
 import InformationRenderComponent from '@/components/myComponents/convoAndcode/inforRenderComponent';
 import { useRouter } from 'next/navigation';
 import EmptyConversation from '@/components/myComponents/convoAndcode/emptyConversation';
@@ -15,6 +14,7 @@ import LoadingComponent from '@/components/myComponents/convoAndcode/loadingComp
 import { modalAtom } from '@/actions/atoms/messageAtom';
 import { useRecoilState } from 'recoil';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
 
 interface messageType {
@@ -35,14 +35,18 @@ function CodeGeneration() {
     const prompt = values.message;
     // console.log(process.env.OPENAI_API_KEY)
     try {
-      const response = await generateCode(prompt);
+      // const response = await generateCode(prompt);
       // const response = "```import React from 'React'```";
+      const response = await axios.post("/api/codegeneration", { prompt: prompt });
+       console.log("response is ",response);
       // await new Promise((resolve) => setTimeout(resolve, 5000));
       if (response?.status === 401) {
         setModal(!modal);
       }
       else {
-        setMessages((currentValue) => [...currentValue, { prompt: prompt, response: response }]);
+        const data = response?.data;
+        console.log("data is ",data);
+        setMessages((currentValue) => [...currentValue, { prompt: prompt, response: data}]);
         reset();
       }
     } catch (error) {
@@ -82,7 +86,7 @@ function CodeGeneration() {
           <EmptyConversation />
         }
 
-        {isSubmitted && messages.map((message) => (
+        {isSubmitted && messages[0].response && messages[0].prompt && messages.map((message) => (
           <div key={message.prompt}>
             <div>
               <InformationRenderComponent icon={User} isMarkdown={false} content={message.prompt} color="text-red-500" bgcolor="bg-red-200/10" />

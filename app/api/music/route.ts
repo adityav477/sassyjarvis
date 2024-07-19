@@ -7,7 +7,7 @@ import { checkLimit, increaseFreeLimit } from '@/lib/apiLimit';
 export async function POST(
   req: Request
 ) {
-// export async function generateMusic(prompt: string) {
+  // export async function generateMusic(prompt: string) {
   try {
     // const session = await auth();
     //
@@ -51,7 +51,7 @@ export async function POST(
       await increaseFreeLimit();
     }
 
-    console.log("output is ",output);
+    console.log("output is ", output);
     return NextResponse.json(output);
 
     // const output = "https://replicate.delivery/czjl/7ig5U1LZrZZPCFte1J4a8skeHf1stVk4AZItucxD6opNqz7lA/gen_sound.wav";
