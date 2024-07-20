@@ -1,8 +1,6 @@
 "use client"
 import { Brain } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 
 function LandingNavbar({ isLoggedIn }: { isLoggedIn: boolean }) {
@@ -18,10 +16,10 @@ function LandingNavbar({ isLoggedIn }: { isLoggedIn: boolean }) {
       </div>
       <div>
         <Link href={isLoggedIn ? "/dashboard" : "/signup"} className='text-center '>
-          <Button className='text-sm rounded-xl bg-white text-black '>
+          <Button className='text-sm rounded-xl bg-white text-black hover:bg-zinc-400'>
             {isLoggedIn ?
               <span>Dashboard</span> :
-              <span>Get Strted</span>
+              <span>Get Started</span>
             }
           </Button>
         </Link>
