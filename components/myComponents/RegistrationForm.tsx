@@ -9,8 +9,6 @@ import {
   CardFooter
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { FcGoogle } from "react-icons/fc"
-import { FaGithub } from "react-icons/fa"
 import Link from "next/link"
 import { useForm } from "react-hook-form";
 import { RegistrationSchema } from "@/schemas"
@@ -20,6 +18,7 @@ import { useState } from "react";
 import registrationAction from "@/actions/RegistrationAction";
 import SocialsButtons from "./socials";
 import { useRouter } from "next/navigation";
+import LoaderButton from "./LoaderButton";
 
 export default function RegistrationForm() {
   const [error, setError] = useState<{ message: string, success: null | number }>({
@@ -81,7 +80,7 @@ export default function RegistrationForm() {
 
             <Button onClick={handleSubmit(onSubmit)}
               variant="outline" className=" text-white bg-gradient-to-r from-pink-500 via-indigo-500 to-purple-500 ">
-              {isSubmitting ? "...Loading" : "SignUp"}
+              {isSubmitting ? <LoaderButton /> : "SignUp"}
             </Button>
             <FormError message={error.message} success={error.success} />
 

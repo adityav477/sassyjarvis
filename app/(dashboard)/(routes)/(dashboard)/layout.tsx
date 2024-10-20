@@ -1,5 +1,4 @@
 'use client'
-import Navbar from "@/components/myComponents/navbar";
 import SideBarComponent from "@/components/myComponents/sidebarComponent";
 import React from "react";
 import { RecoilRoot } from "recoil";
@@ -16,9 +15,8 @@ export default function DashboardLayout({ children }: {
         <div className="hidden h-full md:flex md:flex-col md:w-72 md:fixed md:inset-y-0  bg-slate-800">
           <SideBarComponent />
         </div>
-        <div className="md:pl-72">
+        <div className="my-8 md:pl-72">
           <ToasterProvider />
-          <Navbar />
           {children}
         </div>
       </RecoilRoot>

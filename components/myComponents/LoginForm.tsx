@@ -20,6 +20,7 @@ import SocialsButtons from "./socials";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import LoaderButton from "./LoaderButton";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -81,7 +82,7 @@ export default function LoginForm() {
 
             <Button onClick={handleSubmit(onSubmit)}
               variant="outline" className=" text-white bg-gradient-to-r from-pink-500 via-indigo-500 to-purple-500 ">
-              {isSubmitting ? "...Loading" : "LogIn"}
+              {isSubmitting ? <LoaderButton /> : "LogIn"}
             </Button>
             <FormError message={error.message || errorURL} success={error.success} />
 
@@ -90,11 +91,11 @@ export default function LoginForm() {
         <SocialsButtons />
       </CardContent>
       <CardFooter>
-          <Link href="/signup">
+        <Link href="/signup">
           <Button variant="link" >
             {"Don't have an Account? SignUp"}
           </Button>
-          </Link>
+        </Link>
       </CardFooter>
     </Card>
   </div >

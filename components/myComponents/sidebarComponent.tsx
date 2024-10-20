@@ -55,7 +55,7 @@ export default function SideBarComponent() {
     <div className="bg-slate-800 h-full flex flex-col justify-between text-white">
       <div>
         <Link href="/dashboard" className="bg-black">
-          <div className="flex items-center justify-center gap-1 py-2 " >
+          <div className="flex items-center justify-center gap-1 py-2 mt-2 " >
             <Brain />
             <h1 className="relative bg-clip-text text-transparent font-semibold text-2xl bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500">
               Sassy
